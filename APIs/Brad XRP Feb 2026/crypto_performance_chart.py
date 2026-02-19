@@ -15,7 +15,7 @@ if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
 
 # ── Load API key ──────────────────────────────────────────────────────────────
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 API_KEY = os.getenv("CCDATA_API_KEY")
 if not API_KEY:
     raise ValueError("CCDATA_API_KEY not found in .env")

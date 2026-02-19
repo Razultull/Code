@@ -385,6 +385,26 @@ const HTML = `<!DOCTYPE html>
     animation: pulse 2s infinite;
   }
   .status-dot.disconnected { background: var(--red); animation: none; }
+
+  /* ── Notification Toggle ── */
+  .notif-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    color: var(--dim);
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .notif-btn:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+  .notif-btn.enabled { border-color: var(--green); color: var(--green); }
+  .notif-btn.denied  { border-color: var(--red);   color: var(--red);   cursor: not-allowed; }
+  .notif-icon { font-size: 13px; }
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.4; }
@@ -623,6 +643,9 @@ const HTML = `<!DOCTYPE html>
     <div><span class="status-dot" id="statusDot"></span><span id="statusText">Connecting...</span></div>
     <div>Session: <span class="val" id="hdrSession">--:--:--</span></div>
     <div>Articles: <span class="val" id="hdrArticles">0</span></div>
+    <button class="notif-btn" id="notifBtn" title="Toggle desktop notifications">
+      <span class="notif-icon">🔔</span><span id="notifLabel">Notifications</span>
+    </button>
   </div>
 </div>
 
@@ -675,6 +698,19 @@ const HTML = `<!DOCTYPE html>
 </div>
 
 <div class="feed-container" id="feed"></div>
+
+<script>
+window.onerror = function(msg, src, line) {
+  var el = document.getElementById("statusText");
+  if (el) el.textContent = "JS Error (line " + line + "): " + msg;
+  return false;
+};
+window.onunhandledrejection = function(e) {
+  var el = document.getElementById("statusText");
+  if (el) el.textContent = "Promise Error: " + (e.reason && e.reason.message || e.reason);
+};
+document.getElementById("statusText").textContent = "JS OK - waiting for SSE...";
+</script>
 
 <script>
 const feed = document.getElementById("feed");
@@ -872,6 +908,78 @@ function updateStats(s) {
   ).join("");
 }
 
+// ── Desktop Notifications ──
+
+const notifBtn   = document.getElementById("notifBtn");
+const notifLabel = document.getElementById("notifLabel");
+let notifsEnabled = false;
+const notifSupported = (typeof Notification !== "undefined") && notifBtn && notifLabel;
+
+function updateNotifBtn() {
+  if (!notifSupported) return;
+  try {
+    const perm = Notification.permission;
+    if (perm === "denied") {
+      notifBtn.className = "notif-btn denied";
+      notifLabel.textContent = "Blocked";
+      notifBtn.title = "Notifications blocked in browser site settings";
+      notifsEnabled = false;
+    } else if (notifsEnabled && perm === "granted") {
+      notifBtn.className = "notif-btn enabled";
+      notifLabel.textContent = "Notifs ON";
+    } else {
+      notifBtn.className = "notif-btn";
+      notifLabel.textContent = "Notifications";
+    }
+  } catch (e) {}
+}
+
+if (notifSupported) {
+  notifBtn.addEventListener("click", async () => {
+    try {
+      if (Notification.permission === "denied") return;
+      if (Notification.permission === "default") {
+        const result = await Notification.requestPermission();
+        if (result !== "granted") { updateNotifBtn(); return; }
+      }
+      notifsEnabled = !notifsEnabled;
+      updateNotifBtn();
+      if (notifsEnabled) {
+        new Notification("MNI Live Feed", {
+          body: "Desktop notifications enabled. You will be alerted as new headlines arrive.",
+          silent: true,
+        });
+      }
+    } catch (e) {}
+  });
+} else if (notifBtn) {
+  notifBtn.style.display = "none";
+}
+
+function sentimentLabel(score) {
+  if (score > 0.15) return "Bullish";
+  if (score < -0.15) return "Bearish";
+  return "Neutral";
+}
+
+function fireNotification(a) {
+  if (!notifSupported || !notifsEnabled) return;
+  try {
+    if (Notification.permission !== "granted") return;
+    const section = a.section === "fx-bullets" ? "[FX]" : a.section === "fi-bullets" ? "[FI]" : "";
+    const bullet  = a.bulletCode ? "[" + a.bulletCode + "]" : "";
+    const tag     = [section, bullet].filter(Boolean).join(" ");
+    const title   = tag ? "MNI " + tag : "MNI Market News";
+    const lat     = a.latencyMs != null ? "  lat: " + fmtLatency(a.latencyMs) : "";
+    const body    = a.headline + "\\n" + sentimentLabel(a.score) + lat;
+    const n = new Notification(title, { body, tag: a.ts || String(Date.now()), silent: false });
+    n.onclick = () => { window.focus(); n.close(); };
+  } catch (e) {}
+}
+
+// Init button state on load
+updateNotifBtn();
+
 // ── SSE Connection ──
 
 let es;
@@ -904,7 +1012,9 @@ function connect() {
 
   let pendingNewCount = 0;
   es.addEventListener("article", (e) => {
-    renderArticle(JSON.parse(e.data), true);
+    const a = JSON.parse(e.data);
+    renderArticle(a, true);
+    fireNotification(a);
     pendingNewCount++;
   });
 
@@ -943,7 +1053,7 @@ function handleRequest(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
 
   if (url.pathname === "/" && req.method === "GET") {
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
     res.end(HTML);
     return;
   }

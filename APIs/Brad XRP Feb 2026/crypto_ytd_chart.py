@@ -21,8 +21,8 @@ if sys.stdout.encoding != 'utf-8':
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 DIR         = os.path.dirname(__file__)
-STYLE_FILE  = os.path.join(DIR, "formatting", "chart_styling_RTM.json")
-LOGO_PATH   = os.path.join(DIR, "formatting", "ripple_corporate_triskelion.png")
+STYLE_FILE  = os.path.join(DIR, "..", "formatting", "chart_styling_RTM.json")
+LOGO_PATH   = os.path.join(DIR, "..", "formatting", "ripple_corporate_triskelion.png")
 
 # ── Load styling config ───────────────────────────────────────────────────────
 with open(STYLE_FILE) as f:
@@ -36,7 +36,7 @@ SUBTEXT  = S["colors"]["text_secondary"]
 COLOURS  = S["colors"]["assets"]
 
 # ── Load API key ──────────────────────────────────────────────────────────────
-load_dotenv(dotenv_path=os.path.join(DIR, ".env"))
+load_dotenv(dotenv_path=os.path.join(DIR, "..", ".env"))
 API_KEY = os.getenv("CCDATA_API_KEY")
 if not API_KEY:
     raise ValueError("CCDATA_API_KEY not found in .env")
