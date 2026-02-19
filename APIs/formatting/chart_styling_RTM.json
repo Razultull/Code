@@ -1,0 +1,84 @@
+{
+  "_description": "Ripple Trading Markets — standard chart styling config",
+  "_applies_to": "All matplotlib performance charts",
+
+  "canvas": {
+    "figure_size": [16, 9],
+    "dpi": 150,
+    "background_color": "#0D1117",
+    "panel_color": "#161B22"
+  },
+
+  "colors": {
+    "text_primary": "#E6EDF3",
+    "text_secondary": "#8B949E",
+    "grid": "#21262D",
+    "baseline": "#8B949E",
+    "assets": {
+      "BTC": "#F7931A",
+      "ETH": "#627EEA",
+      "XRP": "#00AAE4",
+      "SOL": "#9945FF"
+    }
+  },
+
+  "lines": {
+    "asset_linewidth": 2.4,
+    "baseline_linewidth": 0.8,
+    "baseline_style": "--",
+    "baseline_alpha": 0.5,
+    "grid_y_linewidth": 0.7,
+    "grid_x_linewidth": 0.4,
+    "grid_x_style": ":"
+  },
+
+  "typography": {
+    "title_fontsize": 16,
+    "title_fontweight": "bold",
+    "subtitle_fontsize": 9,
+    "axis_label_fontsize": 10,
+    "tick_fontsize": 9,
+    "end_label_fontsize": 10,
+    "end_label_fontweight": "bold",
+    "watermark_fontsize": 8,
+    "watermark_fontweight": "bold",
+    "watermark_alpha": 0.4,
+    "footnote_fontsize": 7,
+    "footnote_alpha": 0.6
+  },
+
+  "layout": {
+    "tight_layout_rect": [0, 0.01, 1, 0.95],
+    "remove_left_axis_gap": true,
+    "right_label_x_offset_pts": 8,
+    "end_label_min_vertical_gap": 3.5
+  },
+
+  "legend": {
+    "location": "upper right",
+    "frame_alpha": 0.15,
+    "edge_color": "#21262D",
+    "fontsize": 10
+  },
+
+  "watermark": {
+    "text": "Ripple Trading",
+    "logo_file": "ripple_corporate_triskelion.png",
+    "logo_type": "Ripple corporate triskelion (three connected nodes)",
+    "logo_zoom": 0.025,
+    "logo_alpha": 0.5,
+    "logo_position_x": 0.025,
+    "logo_position_y": 0.045,
+    "text_position_x": 0.05,
+    "text_position_y": 0.045,
+    "text_fontsize": 8,
+    "text_fontweight": "bold",
+    "text_alpha": 0.4,
+    "ha": "left",
+    "va": "center",
+    "placement": "bottom-left, discreet"
+  },
+
+  "data_source": "CCdata Enterprise",
+  "branding": "Ripple Trading Markets (RTM)"
+}

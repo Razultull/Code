@@ -1,0 +1,1735 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "MNI News API Documentation",
+    "description": "API documentation for MNI News endpoints",
+    "contact": {
+      "name": "MNI Development Team",
+      "email": "dev@mnimarkets.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://apis.marketnews.com",
+      "description": "Production environment"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ConceptItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the concept item"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique code within the scheme"
+          },
+          "scheme": {
+            "type": "string",
+            "description": "Scheme code (e.g., mni-section, mni-genre)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the concept item"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "SUBJECT",
+              "GENRE",
+              "ROUTING",
+              "PRODUCT"
+            ],
+            "description": "Type of concept item"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PUBLIC",
+              "PRIVATE"
+            ],
+            "description": "Visibility level of the concept item"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConceptItem"
+            },
+            "description": "Child concept items"
+          },
+          "outgoingRelationships": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "target": {
+                  "$ref": "#/components/schemas/ConceptItem"
+                }
+              }
+            },
+            "description": "Outgoing relationships to other concept items"
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Additional attributes of the concept item"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code"
+          },
+          "name": {
+            "type": "string",
+            "description": "Error name"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "details": {
+            "type": "object",
+            "description": "Additional error details"
+          }
+        }
+      },
+      "ArticleResponse": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "description": "Current page number"
+          },
+          "totalElements": {
+            "type": "integer",
+            "description": "Total number of articles"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NinjsArticle"
+            }
+          }
+        }
+      },
+      "NinjsArticle": {
+        "type": "object",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "description": "Article URI"
+          },
+          "headline": {
+            "type": "string",
+            "description": "Article headline"
+          },
+          "body_text": {
+            "type": "string",
+            "description": "Article body text"
+          },
+          "versioncreated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Article creation date"
+          },
+          "subject": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConceptItem"
+            },
+            "description": "Article subjects"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConceptItem"
+            },
+            "description": "Article genres"
+          }
+        }
+      },
+      "Section": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Section name"
+          },
+          "scheme": {
+            "type": "string",
+            "description": "Section scheme code"
+          },
+          "code": {
+            "type": "string",
+            "description": "Section code"
+          },
+          "description": {
+            "type": "string",
+            "description": "Section description"
+          },
+          "flags": {
+            "type": "object",
+            "properties": {
+              "displayOrder": {
+                "type": "integer",
+                "description": "Display order for sorting"
+              },
+              "displayType": {
+                "type": "string",
+                "description": "Display type"
+              },
+              "canDisplayAsHeadlines": {
+                "type": "boolean",
+                "description": "Whether section can be displayed as headlines"
+              },
+              "searchable": {
+                "type": "boolean",
+                "description": "Whether section is searchable"
+              },
+              "filterable": {
+                "type": "boolean",
+                "description": "Whether section is filterable"
+              },
+              "authorized": {
+                "type": "boolean",
+                "description": "Whether user is authorized for this section"
+              }
+            }
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Section"
+            },
+            "description": "Child sections"
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Subject name"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Subject code"
+                },
+                "scheme": {
+                  "type": "string",
+                  "description": "Subject scheme"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Subject type"
+                }
+              }
+            },
+            "description": "Subjects associated with this section"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/news/articles": {
+      "get": {
+        "summary": "Get articles list",
+        "description": "Retrieve articles. Supports pagination, filtering by subjects/genres/sections, and product-based access control.",
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "section",
+            "in": "query",
+            "description": "Section code to filter articles (e.g., \"section=fx-bullets\")",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination (0-based)",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "excludeSubjects",
+            "in": "query",
+            "description": "Comma-separated list of subject codes to exclude",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeGenres",
+            "in": "query",
+            "description": "Comma-separated list of genre codes to exclude",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeSubjects",
+            "in": "query",
+            "description": "Comma-separated list of subject codes to include",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeSubjectsType",
+            "in": "query",
+            "description": "Type of subject inclusion (AND/OR)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AND",
+                "OR"
+              ],
+              "default": "OR"
+            }
+          },
+          {
+            "name": "includeGenres",
+            "in": "query",
+            "description": "Comma-separated list of genre codes to include",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeGenresType",
+            "in": "query",
+            "description": "Type of genre inclusion (AND/OR)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AND",
+                "OR"
+              ],
+              "default": "OR"
+            }
+          },
+          {
+            "name": "includeKeywords",
+            "in": "query",
+            "description": "Comma-separated list of keywords to include",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "updatedAfter",
+            "in": "query",
+            "description": "Filter articles updated after this date (timestamp in milliseconds or date string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "updatedBefore",
+            "in": "query",
+            "description": "Filter articles updated before this date (timestamp in milliseconds or date string)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "teaser",
+            "in": "query",
+            "description": "Return teaser version of articles",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "short",
+            "in": "query",
+            "description": "Return short version of articles",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/articles?section=YOUR_SECTION&page=YOUR_PAGE&size=YOUR_SIZE&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&teaser=YOUR_TEASER&short=YOUR_SHORT' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/articles?section=YOUR_SECTION&page=YOUR_PAGE&size=YOUR_SIZE&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&teaser=YOUR_TEASER&short=YOUR_SHORT', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/articles?section=YOUR_SECTION&page=YOUR_PAGE&size=YOUR_SIZE&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&teaser=YOUR_TEASER&short=YOUR_SHORT\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/articles?section=YOUR_SECTION&page=YOUR_PAGE&size=YOUR_SIZE&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&teaser=YOUR_TEASER&short=YOUR_SHORT\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/articles?section=YOUR_SECTION&page=YOUR_PAGE&size=YOUR_SIZE&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&teaser=YOUR_TEASER&short=YOUR_SHORT\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/articles?section=YOUR_SECTION&page=YOUR_PAGE&size=YOUR_SIZE&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&teaser=YOUR_TEASER&short=YOUR_SHORT\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/articles/{id}": {
+      "get": {
+        "summary": "Get article by Id",
+        "description": "Retrieve a specific article by its external Id.",
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Article external Id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NinjsArticle"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Article not found or access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/articles/YOUR_ID' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/articles/YOUR_ID', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/articles/YOUR_ID\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/articles/YOUR_ID\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/articles/YOUR_ID\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/articles/YOUR_ID\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/articles-by-slug/{slug}": {
+      "get": {
+        "summary": "Get article by slug",
+        "description": "Retrieve a specific article by its slug.",
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "description": "Article slug",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NinjsArticle"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Article not found or access denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/articles-by-slug/YOUR_SLUG' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/articles-by-slug/YOUR_SLUG', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/articles-by-slug/YOUR_SLUG\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/articles-by-slug/YOUR_SLUG\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/articles-by-slug/YOUR_SLUG\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/articles-by-slug/YOUR_SLUG\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/articles-by-author/{authorId}": {
+      "get": {
+        "summary": "Get articles by author",
+        "description": "Retrieve articles written by a specific author. Supports pagination.",
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "required": true,
+            "description": "Author Id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Author not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/articles-by-author/YOUR_AUTHORID?page=YOUR_PAGE&size=YOUR_SIZE' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/articles-by-author/YOUR_AUTHORID?page=YOUR_PAGE&size=YOUR_SIZE', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/articles-by-author/YOUR_AUTHORID?page=YOUR_PAGE&size=YOUR_SIZE\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/articles-by-author/YOUR_AUTHORID?page=YOUR_PAGE&size=YOUR_SIZE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/articles-by-author/YOUR_AUTHORID?page=YOUR_PAGE&size=YOUR_SIZE\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/articles-by-author/YOUR_AUTHORID?page=YOUR_PAGE&size=YOUR_SIZE\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/search/articles": {
+      "get": {
+        "summary": "Search articles",
+        "description": "Search articles with advanced filtering options. Supports full-text search, filtering by sections/subjects/genres, and sorting by relevance or date.",
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "description": "Search query",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "section",
+            "in": "query",
+            "description": "Section code to filter articles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeSubjects",
+            "in": "query",
+            "description": "Comma-separated list of subject codes to exclude",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeGenres",
+            "in": "query",
+            "description": "Comma-separated list of genre codes to exclude",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeSubjects",
+            "in": "query",
+            "description": "Comma-separated list of subject codes to include",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeSubjectsType",
+            "in": "query",
+            "description": "Type of subject inclusion (AND/OR)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AND",
+                "OR"
+              ],
+              "default": "OR"
+            }
+          },
+          {
+            "name": "includeGenres",
+            "in": "query",
+            "description": "Comma-separated list of genre codes to include",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeGenresType",
+            "in": "query",
+            "description": "Type of genre inclusion (AND/OR)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AND",
+                "OR"
+              ],
+              "default": "OR"
+            }
+          },
+          {
+            "name": "includeKeywords",
+            "in": "query",
+            "description": "Comma-separated list of keywords to include",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination (0-based)",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort order for results",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "score",
+                "versioncreated"
+              ],
+              "default": "score"
+            }
+          },
+          {
+            "name": "updatedAfter",
+            "in": "query",
+            "description": "Filter articles updated after this date (timestamp in milliseconds or date string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "updatedBefore",
+            "in": "query",
+            "description": "Filter articles updated before this date (timestamp in milliseconds or date string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "advancedSearch",
+            "in": "query",
+            "description": "Enable advanced search features",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "array",
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/NinjsArticle"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "score": {
+                                "type": "number",
+                                "description": "Search relevance score"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer"
+                            },
+                            "pageSize": {
+                              "type": "integer"
+                            },
+                            "pageCount": {
+                              "type": "integer"
+                            },
+                            "total": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid search parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/search/articles?q=YOUR_Q&section=YOUR_SECTION&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&page=YOUR_PAGE&size=YOUR_SIZE&sort=YOUR_SORT&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&advancedSearch=YOUR_ADVANCEDSEARCH' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/search/articles?q=YOUR_Q&section=YOUR_SECTION&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&page=YOUR_PAGE&size=YOUR_SIZE&sort=YOUR_SORT&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&advancedSearch=YOUR_ADVANCEDSEARCH', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/search/articles?q=YOUR_Q&section=YOUR_SECTION&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&page=YOUR_PAGE&size=YOUR_SIZE&sort=YOUR_SORT&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&advancedSearch=YOUR_ADVANCEDSEARCH\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/search/articles?q=YOUR_Q&section=YOUR_SECTION&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&page=YOUR_PAGE&size=YOUR_SIZE&sort=YOUR_SORT&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&advancedSearch=YOUR_ADVANCEDSEARCH\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/search/articles?q=YOUR_Q&section=YOUR_SECTION&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&page=YOUR_PAGE&size=YOUR_SIZE&sort=YOUR_SORT&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&advancedSearch=YOUR_ADVANCEDSEARCH\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/search/articles?q=YOUR_Q&section=YOUR_SECTION&excludeSubjects=YOUR_EXCLUDESUBJECTS&excludeGenres=YOUR_EXCLUDEGENRES&includeSubjects=YOUR_INCLUDESUBJECTS&includeSubjectsType=YOUR_INCLUDESUBJECTSTYPE&includeGenres=YOUR_INCLUDEGENRES&includeGenresType=YOUR_INCLUDEGENRESTYPE&includeKeywords=YOUR_INCLUDEKEYWORDS&page=YOUR_PAGE&size=YOUR_SIZE&sort=YOUR_SORT&updatedAfter=YOUR_UPDATEDAFTER&updatedBefore=YOUR_UPDATEDBEFORE&advancedSearch=YOUR_ADVANCEDSEARCH\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/pdf/{fileName}": {
+      "get": {
+        "summary": "Extract text from PDF",
+        "description": "Extract text content from a PDF file.",
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "required": true,
+            "description": "PDF file name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful text extraction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the extraction was successful"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "description": "Extracted text content from PDF"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid file name",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PDF file not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "We couldn't extract the text from the required PDF"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/pdf/YOUR_FILENAME' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/pdf/YOUR_FILENAME', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/pdf/YOUR_FILENAME\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/pdf/YOUR_FILENAME\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/pdf/YOUR_FILENAME\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/pdf/YOUR_FILENAME\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/metadata": {
+      "get": {
+        "summary": "Get public metadata",
+        "description": "Retrieve public concept items (subjects and genres) with pagination support.",
+        "tags": [
+          "Metadata"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "integer",
+              "default": 25
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "number": {
+                      "type": "integer",
+                      "description": "Current page number"
+                    },
+                    "totalElements": {
+                      "type": "integer",
+                      "description": "Total number of items"
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "description": "Total number of pages"
+                    },
+                    "content": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ConceptItem"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/metadata?page=YOUR_PAGE&size=YOUR_SIZE' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/metadata?page=YOUR_PAGE&size=YOUR_SIZE', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/metadata?page=YOUR_PAGE&size=YOUR_SIZE\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/metadata?page=YOUR_PAGE&size=YOUR_SIZE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/metadata?page=YOUR_PAGE&size=YOUR_SIZE\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/metadata?page=YOUR_PAGE&size=YOUR_SIZE\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/metadata/genres": {
+      "get": {
+        "summary": "Get public genres metadata",
+        "description": "Retrieve all public genre concept items with pagination support.",
+        "tags": [
+          "Metadata"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "integer",
+              "default": 25
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with genres metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "number": {
+                      "type": "integer",
+                      "description": "Current page number"
+                    },
+                    "totalElements": {
+                      "type": "integer",
+                      "description": "Total number of genres"
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "description": "Total number of pages"
+                    },
+                    "content": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ConceptItem"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/metadata/genres?page=YOUR_PAGE&size=YOUR_SIZE' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/metadata/genres?page=YOUR_PAGE&size=YOUR_SIZE', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/metadata/genres?page=YOUR_PAGE&size=YOUR_SIZE\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/metadata/genres?page=YOUR_PAGE&size=YOUR_SIZE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/metadata/genres?page=YOUR_PAGE&size=YOUR_SIZE\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/metadata/genres?page=YOUR_PAGE&size=YOUR_SIZE\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/metadata/subjects": {
+      "get": {
+        "summary": "Get public subjects metadata",
+        "description": "Retrieve all public subject concept items with pagination support.",
+        "tags": [
+          "Metadata"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "integer",
+              "default": 25
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with subjects metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "number": {
+                      "type": "integer",
+                      "description": "Current page number"
+                    },
+                    "totalElements": {
+                      "type": "integer",
+                      "description": "Total number of subjects"
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "description": "Total number of pages"
+                    },
+                    "content": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ConceptItem"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/metadata/subjects?page=YOUR_PAGE&size=YOUR_SIZE' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/metadata/subjects?page=YOUR_PAGE&size=YOUR_SIZE', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/metadata/subjects?page=YOUR_PAGE&size=YOUR_SIZE\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/metadata/subjects?page=YOUR_PAGE&size=YOUR_SIZE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/metadata/subjects?page=YOUR_PAGE&size=YOUR_SIZE\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/metadata/subjects?page=YOUR_PAGE&size=YOUR_SIZE\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/metadata/{qcode}": {
+      "get": {
+        "summary": "Get metadata by qcode",
+        "description": "Retrieve a specific concept item by its qcode.",
+        "tags": [
+          "Metadata"
+        ],
+        "parameters": [
+          {
+            "name": "qcode",
+            "in": "path",
+            "required": true,
+            "description": "Concept item qcode (format: scheme:code)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with concept item metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConceptItem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Concept item not found or not public",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/metadata/YOUR_QCODE' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/metadata/YOUR_QCODE', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/metadata/YOUR_QCODE\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/metadata/YOUR_QCODE\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/metadata/YOUR_QCODE\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/metadata/YOUR_QCODE\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    },
+    "/api/v1/news/sections": {
+      "get": {
+        "summary": "Get sections",
+        "description": "Retrieve the hierarchical sections tree with product authorization information.",
+        "tags": [
+          "Sections"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with sections tree",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Section name"
+                      },
+                      "scheme": {
+                        "type": "string",
+                        "description": "Section scheme code"
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "Section code"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Section description"
+                      },
+                      "flags": {
+                        "type": "object",
+                        "properties": {
+                          "displayOrder": {
+                            "type": "integer",
+                            "description": "Display order for sorting"
+                          },
+                          "displayType": {
+                            "type": "string",
+                            "description": "Display type"
+                          },
+                          "canDisplayAsHeadlines": {
+                            "type": "boolean",
+                            "description": "Whether section can be displayed as headlines"
+                          },
+                          "searchable": {
+                            "type": "boolean",
+                            "description": "Whether section is searchable"
+                          },
+                          "filterable": {
+                            "type": "boolean",
+                            "description": "Whether section is filterable"
+                          },
+                          "authorized": {
+                            "type": "boolean",
+                            "description": "Whether user is authorized for this section"
+                          }
+                        }
+                      },
+                      "sections": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Section"
+                        },
+                        "description": "Child sections"
+                      },
+                      "subjects": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "description": "Subject name"
+                            },
+                            "code": {
+                              "type": "string",
+                              "description": "Subject code"
+                            },
+                            "scheme": {
+                              "type": "string",
+                              "description": "Subject scheme"
+                            },
+                            "type": {
+                              "type": "string",
+                              "description": "Subject type"
+                            }
+                          }
+                        },
+                        "description": "Subjects associated with this section"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Section root not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "Shell + cURL",
+            "source": "curl -X GET 'https://apis.marketnews.com/api/v1/news/sections' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const response = await fetch('https://apis.marketnews.com/api/v1/news/sections', {\n  method: 'GET',\n  headers: {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n});\n\nif (!response.ok) {\n  throw new Error(`HTTP error! status: ${response.status}`);\n}\n\nconst data = await response.json();\nconsole.log('Success:', data);"
+          },
+          {
+            "lang": "Python",
+            "source": "import requests\n\nurl = \"https://apis.marketnews.com/api/v1/news/sections\"\nheaders = {\n  \"Content-Type\": \"application/json\",\n  \"Authorization\": \"Bearer YOUR_TOKEN\"\n}\n\nresponse = requests.get(url, headers=headers)\n\nprint(response.json())"
+          },
+          {
+            "lang": "PHP",
+            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://apis.marketnews.com/api/v1/news/sections\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => [\n  \"$k: $v\",\n  \"$k: $v\"\n]\n]);\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          },
+          {
+            "lang": "Java",
+            "source": "import java.io.IOException;\nimport okhttp3.*;\n\npublic class ApiCall {\n  public static void main(String[] args) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n\n    Request request = new Request.Builder()\n      .url(\"https://apis.marketnews.com/api/v1/news/sections\")\n      .get(null)\n      .addHeader(\"Content-Type\", \"application/json\")\n      .addHeader(\"Authorization\", \"Bearer YOUR_TOKEN\")\n      .build();\n\n    try (Response response = client.newCall(request).execute()) {\n      System.out.println(response.body().string());\n    }\n  }\n}"
+          },
+          {
+            "lang": "C#",
+            "source": "using RestSharp;\n\nvar client = new RestClient(\"https://apis.marketnews.com/api/v1/news/sections\");\nvar request = new RestRequest(Method.Get);\n\nrequest.AddHeader(\"Content-Type\", \"application/json\");\nrequest.AddHeader(\"Authorization\", \"Bearer YOUR_TOKEN\");\n\n\n\nIRestResponse response = client.Execute(request);\nConsole.WriteLine(response.Content);"
+          }
+        ]
+      }
+    }
+  }
+}
