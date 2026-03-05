@@ -299,7 +299,7 @@ class StatsEngine {
                   : sectionNames.includes("480257788") ? "fi-bullets"
                   : article._fetchedSection || "";
 
-    return { headline, score, assets, regions, ts: article.versioncreated, byline: article.byline, latencyMs, section, bulletCode, articleType };
+    return { headline, body, score, assets, regions, ts: article.versioncreated, byline: article.byline, latencyMs, section, bulletCode, articleType };
   }
 
   getVelocity() { return this.velocityWindow.length / 30; }
@@ -654,6 +654,69 @@ const HTML = `<!DOCTYPE html>
   }
   .push-dot.disconnected { background: var(--red); animation: none; }
 
+  /* ── Article Body Popup ── */
+  .body-popup {
+    position: fixed;
+    z-index: 9999;
+    max-width: 560px;
+    min-width: 320px;
+    max-height: 420px;
+    background: linear-gradient(165deg, #1a2236 0%, #141c2e 100%);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 1px rgba(59,130,246,0.4);
+    padding: 0;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .body-popup.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .body-popup-header {
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+  }
+  .body-popup-headline {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e2e8f0;
+    line-height: 1.45;
+    margin-bottom: 6px;
+  }
+  .body-popup-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 10px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .body-popup-content {
+    padding: 14px 18px 16px;
+    overflow-y: auto;
+    max-height: 310px;
+    font-family: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #c8d0dc;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .body-popup-content::-webkit-scrollbar { width: 5px; }
+  .body-popup-content::-webkit-scrollbar-track { background: transparent; }
+  .body-popup-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  .body-popup-empty {
+    color: var(--dim);
+    font-style: italic;
+    font-size: 12px;
+  }
+
   /* ── Responsive ── */
   @media (max-width: 900px) {
     .stats-row.top { grid-template-columns: repeat(2, 1fr); }
@@ -832,6 +895,8 @@ function renderArticle(a, isNew, insertAt) {
       '<div class="fi-headline">' + esc(a.headline) + '</div>' +
       '<div class="fi-meta">' + tags + lat + author + '</div>' +
     '</div>';
+
+  div._articleData = a;
 
   // Insert at top (newest first) or at a specific position
   if (insertAt === "bottom") {
@@ -1042,6 +1107,95 @@ function connect() {
 }
 
 connect();
+
+// ── Body Text Popup on Hover ──
+
+const popup = document.createElement("div");
+popup.className = "body-popup";
+popup.innerHTML = '<div class="body-popup-header"><div class="body-popup-headline" id="popupHL"></div><div class="body-popup-meta" id="popupMeta"></div></div><div class="body-popup-content" id="popupBody"></div>';
+document.body.appendChild(popup);
+
+let hoverTimer = null;
+let activeItem = null;
+
+function positionPopup(e) {
+  const pad = 16;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  let x = e.clientX + 14;
+  let y = e.clientY + 14;
+  // Measure after making visible off-screen
+  popup.style.left = "-9999px";
+  popup.style.top = "0";
+  popup.classList.add("visible");
+  const rect = popup.getBoundingClientRect();
+  popup.classList.remove("visible");
+  if (x + rect.width + pad > vw) x = Math.max(pad, e.clientX - rect.width - 14);
+  if (y + rect.height + pad > vh) y = Math.max(pad, vh - rect.height - pad);
+  popup.style.left = x + "px";
+  popup.style.top = y + "px";
+}
+
+function showPopup(item, e) {
+  const data = item._articleData;
+  if (!data) return;
+  const hl = popup.querySelector("#popupHL");
+  const meta = popup.querySelector("#popupMeta");
+  const body = popup.querySelector("#popupBody");
+
+  hl.textContent = data.headline || "";
+  const parts = [];
+  if (data.ts) parts.push(new Date(data.ts).toLocaleString());
+  if (data.byline) parts.push(data.byline);
+  if (data.section) parts.push(data.section === "fx-bullets" ? "FX Bullets" : data.section === "fi-bullets" ? "FI Bullets" : data.section);
+  if (data.bulletCode) parts.push(data.bulletCode);
+  meta.textContent = parts.join("  ·  ");
+
+  if (data.body && data.body.trim()) {
+    body.className = "body-popup-content";
+    body.textContent = data.body;
+  } else {
+    body.className = "body-popup-content";
+    body.innerHTML = '<span class="body-popup-empty">No body text available</span>';
+  }
+
+  positionPopup(e);
+  popup.classList.add("visible");
+  activeItem = item;
+}
+
+function hidePopup() {
+  popup.classList.remove("visible");
+  activeItem = null;
+}
+
+feed.addEventListener("mouseover", (e) => {
+  const item = e.target.closest(".feed-item");
+  if (!item || item === activeItem) return;
+  clearTimeout(hoverTimer);
+  hidePopup();
+  hoverTimer = setTimeout(() => showPopup(item, e), 500);
+});
+
+feed.addEventListener("mousemove", (e) => {
+  if (activeItem && popup.classList.contains("visible")) {
+    // Don't reposition if mouse is over the popup itself
+    if (e.target.closest(".body-popup")) return;
+  }
+});
+
+feed.addEventListener("mouseout", (e) => {
+  const item = e.target.closest(".feed-item");
+  const related = e.relatedTarget;
+  if (item && related && (item.contains(related) || related.closest(".body-popup"))) return;
+  clearTimeout(hoverTimer);
+  hidePopup();
+});
+
+popup.addEventListener("mouseleave", () => {
+  clearTimeout(hoverTimer);
+  hidePopup();
+});
 </script>
 </body>
 </html>`;
