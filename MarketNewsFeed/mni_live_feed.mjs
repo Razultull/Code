@@ -9,17 +9,22 @@
  * Stop:   Ctrl+C (displays session summary)
  */
 
+import { Client } from "@stomp/stompjs";
+import WebSocket from "ws";
+
+// Provide WebSocket to STOMP (Node.js doesn't have a global WebSocket)
+Object.assign(global, { WebSocket });
+
 // ─── Configuration ───────────────────────────────────────────────────────────
 
 const API_BASE = "https://apis.marketnews.com";
 const AUTH_ENDPOINT = `${API_BASE}/api/auth/client/token`;
 const ARTICLES_ENDPOINT = `${API_BASE}/api/v1/news/articles`;
-const SECTIONS_ENDPOINT = `${API_BASE}/api/v1/news/sections`;
+const WSS_URI = "wss://apis.marketnews.com/wss";
 
 const USERNAME = "ripplemarkets01";
 const PASSWORD = "8TYwWewl6P1Heun";
 
-const POLL_INTERVAL_MS = 15_000;
 const PAGE_SIZE = 50;
 const TOKEN_REFRESH_BUFFER_MS = 300_000;
 
@@ -103,6 +108,8 @@ class MNIClient {
     this.accessToken = null;
     this.refreshToken = null;
     this.tokenExpiry = null;
+    this.stompClient = null;
+    this.onArticle = null;
   }
 
   async authenticate() {
@@ -132,13 +139,6 @@ class MNIClient {
     };
   }
 
-  async getSections() {
-    await this.ensureToken();
-    const resp = await fetch(SECTIONS_ENDPOINT, { headers: this.headers() });
-    if (!resp.ok) throw new Error(`Sections failed: ${resp.status}`);
-    return resp.json();
-  }
-
   async getArticles(section, size = PAGE_SIZE, updatedAfter = null) {
     await this.ensureToken();
     const params = new URLSearchParams({ size: String(size) });
@@ -147,6 +147,58 @@ class MNIClient {
     const resp = await fetch(`${ARTICLES_ENDPOINT}?${params}`, { headers: this.headers() });
     if (!resp.ok) throw new Error(`Articles failed: ${resp.status}`);
     return resp.json();
+  }
+
+  connectStomp() {
+    return new Promise((resolve, reject) => {
+      console.log(`${C.DIM}Connecting STOMP to ${WSS_URI}${C.RESET}`);
+      let resolved = false;
+
+      this.stompClient = new Client({
+        brokerURL: `${WSS_URI}?token=${this.accessToken}`,
+        connectHeaders: {
+          Authorization: `Bearer ${this.accessToken}`,
+          login: USERNAME,
+          passcode: this.accessToken,
+        },
+        reconnectDelay: 5000,
+        heartbeatIncoming: 10000,
+        heartbeatOutgoing: 10000,
+
+        onConnect: (frame) => {
+          console.log(`${C.GREEN}✓ STOMP connected${C.RESET} (${frame.headers?.server || "OK"})`);
+
+          // Subscribe to the news articles topic (filtered by account permissions)
+          this.stompClient.subscribe("/topic/news/articles", (message) => {
+            try {
+              const article = JSON.parse(message.body);
+              if (this.onArticle) this.onArticle(article);
+            } catch (e) {
+              // ignore non-article messages
+            }
+          });
+          console.log(`${C.GREEN}✓ Subscribed to /topic/news/articles${C.RESET}`);
+
+          if (!resolved) { resolved = true; resolve(); }
+        },
+
+        onStompError: (frame) => {
+          console.error(`${C.RED}STOMP error: ${frame.headers?.message || "Unknown"}${C.RESET}`);
+          console.error(`${C.RED}STOMP error headers: ${JSON.stringify(frame.headers)}${C.RESET}`);
+          if (!resolved) { resolved = true; reject(new Error(frame.headers?.message || "STOMP error")); }
+        },
+
+        onWebSocketClose: () => {
+          console.log(`\n${C.YELLOW}STOMP WebSocket closed. Auto-reconnecting...${C.RESET}`);
+        },
+
+        onWebSocketError: () => {
+          console.error(`${C.RED}STOMP WebSocket error${C.RESET}`);
+        },
+      });
+
+      this.stompClient.activate();
+    });
   }
 }
 
@@ -513,17 +565,8 @@ async function main() {
     process.exit(1);
   }
 
-  // Fetch sections
-  try {
-    const sections = await client.getSections();
-    const authorized = sections.filter(s => s.flags?.authorized);
-    console.log(`${C.GREEN}\u2713 Authorized sections:${C.RESET} ${authorized.map(s => s.code).join(", ")}`);
-  } catch (e) {
-    console.log(`${C.YELLOW}Could not fetch sections: ${e.message}${C.RESET}`);
-  }
-
   console.log(`${C.GREEN}\u2713 Monitoring:${C.RESET} ${MONITORED_SECTIONS.join(", ")}`);
-  console.log(`${C.GREEN}\u2713 Poll interval:${C.RESET} ${POLL_INTERVAL_MS / 1000}s`);
+  console.log(`${C.GREEN}\u2713 Transport:${C.RESET} WebSocket push (${WSS_URI})`);
   console.log(`${C.DIM}Press Ctrl+C to stop and show session summary${C.RESET}`);
   console.log();
   console.log(SEP);
@@ -567,44 +610,42 @@ async function main() {
   // Print initial stats
   printStatsSummary(stats);
 
-  // ── Polling loop ──
-  let lastPollTime = new Date().toISOString();
+  // ── WebSocket push feed ──
+  let newSinceLastStats = 0;
 
-  while (true) {
-    await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));
-
-    const pollReceiveTime = Date.now();
-    let newCount = 0;
-
-    for (const section of MONITORED_SECTIONS) {
-      try {
-        const data = await client.getArticles(section, PAGE_SIZE, lastPollTime);
-        const articles = data.content || [];
-
-        articles.sort((a, b) => new Date(a.versioncreated) - new Date(b.versioncreated));
-
-        for (const article of articles) {
-          article._fetchedSection = section;
-          const info = stats.processArticle(article, pollReceiveTime);
-          if (info) {
-            printHeadline(info, true);
-            newCount++;
-          }
-        }
-      } catch {}
+  client.onArticle = (article) => {
+    const receiveTime = Date.now();
+    const info = stats.processArticle(article, receiveTime);
+    if (info) {
+      printHeadline(info, true);
+      newSinceLastStats++;
+      // Print stats summary every 5 new articles
+      if (newSinceLastStats >= 5) {
+        printStatsSummary(stats);
+        newSinceLastStats = 0;
+      }
     }
+  };
 
-    lastPollTime = new Date().toISOString();
+  await client.connectStomp();
 
-    // Always reprint stats after each poll cycle
-    if (newCount > 0) {
+  console.log();
+  console.log(`  ${C.GREEN}STOMP push feed active — listening for new articles...${C.RESET}`);
+  console.log();
+
+  // Periodic heartbeat so user knows it's alive
+  setInterval(() => {
+    if (newSinceLastStats > 0) {
       printStatsSummary(stats);
+      newSinceLastStats = 0;
     } else {
-      // Heartbeat so user knows it's alive
       const now = new Date().toISOString().slice(11, 19);
-      process.stdout.write(`\r  ${C.DIM}${now} \u2764 listening... (${stats.totalArticles} articles, ${formatLatency(stats.getLatencyStats()?.avg)} avg latency)${C.RESET}     `);
+      process.stdout.write(`\r  ${C.DIM}${now} \u2764 push feed active (${stats.totalArticles} articles, ${formatLatency(stats.getLatencyStats()?.avg)} avg latency)${C.RESET}     `);
     }
-  }
+  }, 15_000);
+
+  // Keep the process alive
+  await new Promise(() => {});
 }
 
 main().catch(e => {

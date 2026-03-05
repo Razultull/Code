@@ -9,18 +9,22 @@
  */
 
 import { createServer } from "node:http";
+import { Client } from "@stomp/stompjs";
+import WebSocket from "ws";
+
+// Provide WebSocket to STOMP (Node.js doesn't have a global WebSocket)
+Object.assign(global, { WebSocket });
 
 // ─── Configuration ───────────────────────────────────────────────────────────
 
 const API_BASE = "https://apis.marketnews.com";
 const AUTH_ENDPOINT = `${API_BASE}/api/auth/client/token`;
 const ARTICLES_ENDPOINT = `${API_BASE}/api/v1/news/articles`;
-const SECTIONS_ENDPOINT = `${API_BASE}/api/v1/news/sections`;
+const WSS_URI = "wss://apis.marketnews.com/wss";
 
 const USERNAME = "ripplemarkets01";
 const PASSWORD = "8TYwWewl6P1Heun";
 
-const POLL_INTERVAL_MS = 15_000;
 const PAGE_SIZE = 50;
 const TOKEN_REFRESH_BUFFER_MS = 300_000;
 const MAX_HISTORY = 500;
@@ -85,6 +89,8 @@ class MNIClient {
     this.accessToken = null;
     this.refreshToken = null;
     this.tokenExpiry = null;
+    this.stompClient = null;
+    this.onArticle = null; // callback for incoming push articles
   }
 
   async authenticate() {
@@ -114,13 +120,6 @@ class MNIClient {
     };
   }
 
-  async getSections() {
-    await this.ensureToken();
-    const resp = await fetch(SECTIONS_ENDPOINT, { headers: this.headers() });
-    if (!resp.ok) throw new Error(`Sections failed: ${resp.status}`);
-    return resp.json();
-  }
-
   async getArticles(section, size = PAGE_SIZE, updatedAfter = null) {
     await this.ensureToken();
     const params = new URLSearchParams({ size: String(size) });
@@ -129,6 +128,61 @@ class MNIClient {
     const resp = await fetch(`${ARTICLES_ENDPOINT}?${params}`, { headers: this.headers() });
     if (!resp.ok) throw new Error(`Articles failed: ${resp.status}`);
     return resp.json();
+  }
+
+  // ── STOMP over WebSocket Push Connection ──
+
+  connectStomp() {
+    return new Promise((resolve, reject) => {
+      console.log(`Connecting STOMP to ${WSS_URI}`);
+      let resolved = false;
+
+      this.stompClient = new Client({
+        brokerURL: `${WSS_URI}?token=${this.accessToken}`,
+        connectHeaders: {
+          Authorization: `Bearer ${this.accessToken}`,
+          login: USERNAME,
+          passcode: this.accessToken,
+        },
+        reconnectDelay: 5000,
+        heartbeatIncoming: 10000,
+        heartbeatOutgoing: 10000,
+
+        onConnect: (frame) => {
+          console.log("STOMP connected:", frame.headers?.server || "OK");
+
+          // Subscribe to the news articles topic (filtered by account permissions)
+          this.stompClient.subscribe("/topic/news/articles", (message) => {
+            try {
+              const article = JSON.parse(message.body);
+              if (this.onArticle) this.onArticle(article);
+            } catch (e) {
+              console.error("STOMP message parse error:", e.message);
+            }
+          });
+          console.log("Subscribed to /topic/news/articles");
+
+          if (!resolved) { resolved = true; resolve(); }
+        },
+
+        onStompError: (frame) => {
+          console.error("STOMP error:", frame.headers?.message || "Unknown");
+          console.error("STOMP error headers:", JSON.stringify(frame.headers));
+          console.error("STOMP error body:", frame.body);
+          if (!resolved) { resolved = true; reject(new Error(frame.headers?.message || "STOMP error")); }
+        },
+
+        onWebSocketClose: (evt) => {
+          console.log("STOMP WebSocket closed. Will auto-reconnect...");
+        },
+
+        onWebSocketError: (evt) => {
+          console.error("STOMP WebSocket error");
+        },
+      });
+
+      this.stompClient.activate();
+    });
   }
 }
 
@@ -575,31 +629,8 @@ const HTML = `<!DOCTYPE html>
     margin: 4px 24px;
   }
 
-  /* ── Poll Progress Bar ── */
-  .poll-bar {
-    height: 3px;
-    background: rgba(255,255,255,0.05);
-    flex-shrink: 0;
-    overflow: hidden;
-    position: relative;
-  }
-  .poll-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--cyan));
-    width: 0%;
-    transition: width 0.5s linear;
-    border-radius: 0 2px 2px 0;
-  }
-  .poll-bar-fill.polling {
-    width: 100% !important;
-    background: linear-gradient(90deg, var(--cyan), var(--green));
-    animation: pollPulse 0.8s ease-in-out infinite;
-  }
-  @keyframes pollPulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
-  .poll-status {
+  /* ── Push Status Bar ── */
+  .push-status {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -607,26 +638,21 @@ const HTML = `<!DOCTYPE html>
     font-size: 10px;
     color: var(--dim);
     background: rgba(255,255,255,0.02);
+    border-top: 1px solid var(--border);
     flex-shrink: 0;
   }
-  .poll-status .poll-label {
+  .push-status .push-label {
     display: flex;
     align-items: center;
     gap: 6px;
   }
-  .poll-spinner {
-    display: none;
-    width: 10px;
-    height: 10px;
-    border: 2px solid var(--border);
-    border-top-color: var(--cyan);
+  .push-dot {
+    width: 6px; height: 6px;
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    background: var(--green);
+    animation: pulse 2s infinite;
   }
-  .poll-spinner.active { display: inline-block; }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+  .push-dot.disconnected { background: var(--red); animation: none; }
 
   /* ── Responsive ── */
   @media (max-width: 900px) {
@@ -688,13 +714,12 @@ const HTML = `<!DOCTYPE html>
   </div>
 </div>
 
-<div class="poll-bar"><div class="poll-bar-fill" id="pollBarFill"></div></div>
-<div class="poll-status">
-  <div class="poll-label">
-    <div class="poll-spinner" id="pollSpinner"></div>
-    <span id="pollLabel">Initializing...</span>
+<div class="push-status">
+  <div class="push-label">
+    <div class="push-dot" id="pushDot"></div>
+    <span id="pushLabel">Connecting to push feed...</span>
   </div>
-  <span id="pollCountdown"></span>
+  <span id="pushInfo">WSS</span>
 </div>
 
 <div class="feed-container" id="feed"></div>
@@ -724,48 +749,26 @@ function scrollToTop() {
   if (autoScroll) feed.scrollTop = 0;
 }
 
-// ── Poll Timer ──
-const POLL_MS = 15000;
-let pollStart = Date.now();
-let pollTimerId = null;
-const pollBarFill = document.getElementById("pollBarFill");
-const pollSpinner = document.getElementById("pollSpinner");
-const pollLabel = document.getElementById("pollLabel");
-const pollCountdown = document.getElementById("pollCountdown");
+// ── Push Status ──
+const pushDot = document.getElementById("pushDot");
+const pushLabel = document.getElementById("pushLabel");
+const pushInfo = document.getElementById("pushInfo");
+let lastArticleTime = null;
 
-function startPollTimer() {
-  pollStart = Date.now();
-  pollBarFill.classList.remove("polling");
-  pollBarFill.style.width = "0%";
-  pollSpinner.classList.remove("active");
-  pollLabel.textContent = "Next update in";
-  if (pollTimerId) clearInterval(pollTimerId);
-  pollTimerId = setInterval(() => {
-    const elapsed = Date.now() - pollStart;
-    const pct = Math.min((elapsed / POLL_MS) * 100, 100);
-    pollBarFill.style.width = pct + "%";
-    const remaining = Math.max(0, Math.ceil((POLL_MS - elapsed) / 1000));
-    pollCountdown.textContent = remaining + "s";
-    if (pct >= 95) {
-      pollBarFill.classList.add("polling");
-      pollSpinner.classList.add("active");
-      pollLabel.textContent = "Fetching updates";
-      pollCountdown.textContent = "";
-    }
-  }, 250);
+function showPushActive() {
+  pushDot.className = "push-dot";
+  pushLabel.textContent = "Push feed active";
 }
 
-function showPollComplete(newCount) {
-  pollBarFill.classList.remove("polling");
-  pollSpinner.classList.remove("active");
-  if (newCount > 0) {
-    pollLabel.textContent = "+" + newCount + " new article" + (newCount > 1 ? "s" : "");
-    pollBarFill.style.width = "100%";
-  } else {
-    pollLabel.textContent = "No new articles";
-  }
-  pollCountdown.textContent = "";
-  setTimeout(startPollTimer, 1500);
+function showPushArticle() {
+  lastArticleTime = Date.now();
+  pushLabel.textContent = "Article received just now";
+  // Reset to idle after a few seconds
+  setTimeout(() => {
+    if (Date.now() - lastArticleTime >= 2500) {
+      pushLabel.textContent = "Push feed active — listening";
+    }
+  }, 3000);
 }
 
 function fmtLatency(ms) {
@@ -1007,28 +1010,24 @@ function connect() {
     updateStats(s);
     dot.className = "status-dot";
     txt.textContent = "Live";
-    startPollTimer();
+    showPushActive();
   });
 
-  let pendingNewCount = 0;
   es.addEventListener("article", (e) => {
     const a = JSON.parse(e.data);
     renderArticle(a, true);
     fireNotification(a);
-    pendingNewCount++;
+    showPushArticle();
   });
 
   es.addEventListener("stats", (e) => {
     updateStats(JSON.parse(e.data));
-    showPollComplete(pendingNewCount);
-    pendingNewCount = 0;
   });
 
   es.addEventListener("heartbeat", (e) => {
     const hb = JSON.parse(e.data);
     document.getElementById("hdrSession").textContent = hb.sessionDuration || "--";
     document.getElementById("hdrArticles").textContent = hb.totalArticles;
-    showPollComplete(0);
   });
 
   es.onerror = () => {
@@ -1088,14 +1087,14 @@ function handleRequest(req, res) {
   res.end("Not Found");
 }
 
-// ─── Polling Loop ────────────────────────────────────────────────────────────
+// ─── WebSocket Push Feed ─────────────────────────────────────────────────────
 
-async function startPolling() {
+async function startFeed() {
   console.log("Authenticating with MNI API...");
   const authData = await client.authenticate();
   console.log(`Authenticated (token valid for ${Math.floor(authData.expires_in / 60)} min)`);
 
-  // Initial fetch
+  // Initial fetch via REST to load history
   const fetchTime = Date.now();
   for (const section of MONITORED_SECTIONS) {
     try {
@@ -1113,51 +1112,36 @@ async function startPolling() {
     }
   }
   articleHistory.sort((a, b) => new Date(a.ts) - new Date(b.ts));
-  // Cap history
   while (articleHistory.length > MAX_HISTORY) articleHistory.shift();
 
   console.log(`Loaded ${articleHistory.length} historical articles`);
-  console.log(`Monitoring: ${MONITORED_SECTIONS.join(", ")} (poll every ${POLL_INTERVAL_MS / 1000}s)`);
+  console.log(`Connecting to WebSocket push feed...`);
 
-  // Poll loop
-  let lastPollTime = new Date().toISOString();
-  while (true) {
-    await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));
-    const pollReceiveTime = Date.now();
-    let newCount = 0;
-
-    for (const section of MONITORED_SECTIONS) {
-      try {
-        const data = await client.getArticles(section, PAGE_SIZE, lastPollTime);
-        const articles = (data.content || []).sort(
-          (a, b) => new Date(a.versioncreated) - new Date(b.versioncreated)
-        );
-        for (const article of articles) {
-          article._fetchedSection = section;
-          const info = stats.processArticle(article, pollReceiveTime);
-          if (info) {
-            info.isNew = true;
-            articleHistory.push(info);
-            while (articleHistory.length > MAX_HISTORY) articleHistory.shift();
-            broadcast("article", info);
-            newCount++;
-          }
-        }
-      } catch {}
-    }
-
-    lastPollTime = new Date().toISOString();
-
-    if (newCount > 0) {
+  // Set up article handler for incoming push messages
+  client.onArticle = (article) => {
+    const receiveTime = Date.now();
+    const info = stats.processArticle(article, receiveTime);
+    if (info) {
+      info.isNew = true;
+      articleHistory.push(info);
+      while (articleHistory.length > MAX_HISTORY) articleHistory.shift();
+      broadcast("article", info);
       broadcast("stats", buildStatsSnapshot());
-    } else {
-      broadcast("heartbeat", {
-        time: new Date().toISOString().slice(11, 19),
-        totalArticles: stats.totalArticles,
-        sessionDuration: stats.getSessionDuration(),
-      });
     }
-  }
+  };
+
+  // Connect to STOMP push endpoint
+  await client.connectStomp();
+  console.log(`Live STOMP push feed active on ${WSS_URI}`);
+
+  // Periodic heartbeat for connected SSE clients (every 15s)
+  setInterval(() => {
+    broadcast("heartbeat", {
+      time: new Date().toISOString().slice(11, 19),
+      totalArticles: stats.totalArticles,
+      sessionDuration: stats.getSessionDuration(),
+    });
+  }, 15_000);
 }
 
 // ─── Start ───────────────────────────────────────────────────────────────────
@@ -1165,7 +1149,7 @@ async function startPolling() {
 const server = createServer(handleRequest);
 server.listen(PORT, () => {
   console.log(`\nMNI Live Feed Web App running at http://localhost:${PORT}\n`);
-  startPolling().catch(e => {
+  startFeed().catch(e => {
     console.error("Fatal error:", e.message);
     process.exit(1);
   });
