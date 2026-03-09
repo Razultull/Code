@@ -1,0 +1,805 @@
+[
+  {
+    "id": "reclaim0focus0o020o031404710o0202603090o06166610o000o0570665247",
+    "summary": "✍ Focus time",
+    "start": {
+      "dateTime": "2026-03-09T08:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T08:30:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "rchatterjee@ripple.com"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=cmVjbGFpbTBmb2N1czBvMDIwbzAzMTQwNDcxMG8wMjAyNjAzMDkwbzA2MTY2NjEwbzAwMG8wNTcwNjY1MjQ3IHJjaGF0dGVyamVlQHJpcHBsZS5jb20&ctz=Europe/London"
+  },
+  {
+    "id": "reclaim0habit0o040o044093030o044093030o020260309",
+    "summary": "🆓 Morning Spin Up",
+    "start": {
+      "dateTime": "2026-03-09T08:30:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T10:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "rchatterjee@ripple.com"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=cmVjbGFpbTBoYWJpdDBvMDQwbzA0NDA5MzAzMG8wNDQwOTMwMzBvMDIwMjYwMzA5IHJjaGF0dGVyamVlQHJpcHBsZS5jb20&ctz=Europe/London"
+  },
+  {
+    "id": "kddl7j8og0uu8e6eq1luietjm8_20260309T091500Z",
+    "summary": "Daily Trading Sync",
+    "start": {
+      "dateTime": "2026-03-09T09:15:00Z",
+      "timeZone": "Asia/Singapore"
+    },
+    "end": {
+      "dateTime": "2026-03-09T09:30:00Z",
+      "timeZone": "Asia/Singapore"
+    },
+    "status": "confirmed",
+    "location": "https://ripple.zoom.us/j/96285819506?pwd=c2xmYzJFdjZBaEhvU0pnejJzWFpjZz09",
+    "organizer": {
+      "email": "mmisra@ripple.com",
+      "displayName": "Manas Misra"
+    },
+    "attendees": [
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "mfages@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "thende@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "aimeraj@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "aturakhia@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "nkhakoo@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "amukhachou@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "mmisra@ripple.com",
+        "responseStatus": "accepted",
+        "displayName": "Manas Misra"
+      },
+      {
+        "email": "xchen@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "amellusco@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "jmower@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "vthanki@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "atan@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "rverrillo@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "kyemelianov@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "vwu@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "c_18852n34rsoc6iurm4akjipu1qmle@resource.calendar.google.com",
+        "responseStatus": "declined",
+        "displayName": "SIN-46-Chijmes (2) [Zoom]"
+      },
+      {
+        "email": "siw@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "pthirlwall@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "tmaule@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "rshukla@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "alewin@ripple.com",
+        "responseStatus": "accepted"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=a2RkbDdqOG9nMHV1OGU2ZXExbHVpZXRqbThfMjAyNjAzMDlUMDkxNTAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "16k83t4pleq2hftuj7r2fbaucr_20260309T100000Z",
+    "summary": "Rahul <> Adi weekly",
+    "start": {
+      "dateTime": "2026-03-09T10:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T10:30:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "location": "https://ripple.zoom.us/j/96942110084?pwd=8Twnn0ZCT7MutCzfkPD2muvhA61z5a.1&jst=3",
+    "organizer": {
+      "email": "aturakhia@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "aturakhia@ripple.com",
+        "responseStatus": "accepted"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=MTZrODN0NHBsZXEyaGZ0dWo3cjJmYmF1Y3JfMjAyNjAzMDlUMTAwMDAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "kh0t8gk78nenfq5o733h6gdffk_20260309T103000Z",
+    "summary": "Check-in - Ripple <> CS",
+    "start": {
+      "dateTime": "2026-03-09T10:30:00Z",
+      "timeZone": "Asia/Singapore"
+    },
+    "end": {
+      "dateTime": "2026-03-09T11:30:00Z",
+      "timeZone": "Asia/Singapore"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "mfages@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "mfages@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "david.twomey@coinstrats.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "mmisra@ripple.com",
+        "responseStatus": "needsAction",
+        "displayName": "Manas Misra"
+      },
+      {
+        "email": "andrew.mann@coinstrats.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "ripple.com_1887ma86gaejgicmj0nb89oe6vj9s6gb70sj0dpp70ojcdhl6k@resource.calendar.google.com",
+        "responseStatus": "declined",
+        "displayName": "X18Robinson-22-Orchard Road (12) [Zoom]"
+      },
+      {
+        "email": "amellusco@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "ylyakh@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "jose.chittilappilly@immix.xyz",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "modestas.gujis@immix.xyz",
+        "responseStatus": "needsAction"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=a2gwdDhnazc4bmVuZnE1bzczM2g2Z2RmZmtfMjAyNjAzMDlUMTAzMDAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "reclaim0focus0o020o031404710o0202603090o06166610o000o01967720910",
+    "summary": "✍ Focus time",
+    "start": {
+      "dateTime": "2026-03-09T10:30:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T11:30:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "rchatterjee@ripple.com"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=cmVjbGFpbTBmb2N1czBvMDIwbzAzMTQwNDcxMG8wMjAyNjAzMDkwbzA2MTY2NjEwbzAwMG8wMTk2NzcyMDkxMCByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "reclaim0habit0o040o044092770o044092770o020260309",
+    "summary": "🛡 🍱 Lunch",
+    "start": {
+      "dateTime": "2026-03-09T11:30:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T12:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "rchatterjee@ripple.com"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=cmVjbGFpbTBoYWJpdDBvMDQwbzA0NDA5Mjc3MG8wNDQwOTI3NzBvMDIwMjYwMzA5IHJjaGF0dGVyamVlQHJpcHBsZS5jb20&ctz=Europe/London"
+  },
+  {
+    "id": "0esvsi3p5jq3gpg9itsregtair_20260309T120000Z",
+    "summary": "Weekly HRP <> RLUSD *Core Team*",
+    "start": {
+      "dateTime": "2026-03-09T12:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T13:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "location": "https://ripple.zoom.us/j/91289093515?pwd=7mGog1xbkjl4bn4cnoaaTq7cBhDAE0.1&jst=3, LON-17-Millennium (4) [Zoom]",
+    "organizer": {
+      "email": "aturakhia@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "ripple.com_1884nki8uumughm8g4i578kdvhpa06gb6srjechl60qjidpj74@resource.calendar.google.com",
+        "responseStatus": "accepted",
+        "displayName": "LON-17-Millennium (4) [Zoom]"
+      },
+      {
+        "email": "cmyers@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "jmciver@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "fhe@hiddenroad.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "schen@hiddenroad.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "lbates@hiddenroad.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "thende@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "arosoman@hiddenroad.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "aturakhia@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "jkee@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "vthanki@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "rverrillo@ripple.com",
+        "responseStatus": "tentative"
+      },
+      {
+        "email": "mhiggins@hiddenroad.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "jchow@hiddenroad.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "akallelis@hiddenroad.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "jmcdonald@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "rshukla@ripple.com",
+        "responseStatus": "accepted"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=MGVzdnNpM3A1anEzZ3BnOWl0c3JlZ3RhaXJfMjAyNjAzMDlUMTIwMDAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "3f1ckbr54kol65pvf3j8lc2985_20260309T120000Z",
+    "summary": "block",
+    "start": {
+      "dateTime": "2026-03-09T12:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T13:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "rchatterjee@ripple.com"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=M2YxY2ticjU0a29sNjVwdmYzajhsYzI5ODVfMjAyNjAzMDlUMTIwMDAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "17c5ccdfgun352dofau1335kbf_20260309T130000Z",
+    "summary": "Morning Snapshot",
+    "start": {
+      "dateTime": "2026-03-09T13:00:00Z",
+      "timeZone": "America/New_York"
+    },
+    "end": {
+      "dateTime": "2026-03-09T14:30:00Z",
+      "timeZone": "America/New_York"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "amukhachou@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "amukhachou@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "balergant@ripple.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "kgupta@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "jberridi@ripple.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "jshik@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "yeyunc@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "aimeraj@ripple.com",
+        "responseStatus": "accepted"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=MTdjNWNjZGZndW4zNTJkb2ZhdTEzMzVrYmZfMjAyNjAzMDlUMTMwMDAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "5fn1sqrodj2kjpifkpsg1me4vo_20260309T130000Z",
+    "summary": "Trident Tracker",
+    "start": {
+      "dateTime": "2026-03-09T13:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T14:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "rchatterjee@ripple.com"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=NWZuMXNxcm9kajJranBpZmtwc2cxbWU0dm9fMjAyNjAzMDlUMTMwMDAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "uurpi2if6gl2n6q4kp4rssv12g_20260309T140000Z",
+    "summary": "Trevor/Rahul weekly catchup",
+    "start": {
+      "dateTime": "2026-03-09T14:00:00Z",
+      "timeZone": "Europe/Dublin"
+    },
+    "end": {
+      "dateTime": "2026-03-09T14:30:00Z",
+      "timeZone": "Europe/Dublin"
+    },
+    "status": "confirmed",
+    "location": "https://ripple.zoom.us/j/97213263862?pwd=HWvaShL1iuiw0b17lSkg2bit0m8MeG.1",
+    "organizer": {
+      "email": "tmelville@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "tmelville@ripple.com",
+        "responseStatus": "accepted"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=dXVycGkyaWY2Z2wybjZxNGtwNHJzc3YxMmdfMjAyNjAzMDlUMTQwMDAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "reclaim0focus0o020o031404710o0202603090o06166610o000o01778395476",
+    "summary": "✍ Focus time",
+    "start": {
+      "dateTime": "2026-03-09T14:30:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T15:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "rchatterjee@ripple.com"
+    },
+    "htmlLink": "https://www.google.com/calendar/event?eid=cmVjbGFpbTBmb2N1czBvMDIwbzAzMTQwNDcxMG8wMjAyNjAzMDkwbzA2MTY2NjEwbzAwMG8wMTc3ODM5NTQ3NiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "1c07iod8mrb2qopg6ao0o64e8s",
+    "summary": "Employee Circle: 2026 Performance Review Process (Option 1 of 5)",
+    "start": {
+      "dateTime": "2026-03-09T15:00:00Z",
+      "timeZone": "America/Phoenix"
+    },
+    "end": {
+      "dateTime": "2026-03-09T15:45:00Z",
+      "timeZone": "America/Phoenix"
+    },
+    "status": "confirmed",
+    "location": "https://ripple.zoom.us/j/94587705626?pwd=iK2wxTIafpXTj3j57MhlCVjFZ3bdRM.1&jst=3, NYC-111-6-Brooklyn (8) [Zoom], SFO-1-Exchange (5) [Zoom], DUB-30-Burj (4), CHI-11-Gold Coast (12), GVA-5-Brienz (5), MIA-9-Biscayne Blvd (4) [Zoom], LON-17-Westminster (11) [Zoom]",
+    "organizer": {
+      "email": "ncongelosi@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "needsAction"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=MWMwN2lvZDhtcmIycW9wZzZhbzBvNjRlOHMgcmNoYXR0ZXJqZWVAcmlwcGxlLmNvbQ&ctz=Europe/London"
+  },
+  {
+    "id": "2soi1kjovtsilk43cdj9lp74pd_20260309T150000Z",
+    "summary": "Weekly internal RLUSD DeFI",
+    "start": {
+      "dateTime": "2026-03-09T15:00:00Z",
+      "timeZone": "Europe/London"
+    },
+    "end": {
+      "dateTime": "2026-03-09T15:45:00Z",
+      "timeZone": "Europe/London"
+    },
+    "status": "confirmed",
+    "location": "https://ripple.zoom.us/j/95774708586?pwd=R93hhVrnPYOA9B8lSyJyTFyFqxW5zI.1, SFO-2-Licensed (7) [Zoom], NYC-111-6-George Washington (5) [Zoom]",
+    "organizer": {
+      "email": "rchatterjee@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "c_188bg0lqs1a3agehk7bm2e8ggh64m@resource.calendar.google.com",
+        "responseStatus": "declined",
+        "displayName": "SFO-2-Whitepaper (5) [Zoom]"
+      },
+      {
+        "email": "ripple.com_188apuldl7v3iilon5eq9mfaahfua6gb70rj0chh74sj6d1i6k@resource.calendar.google.com",
+        "responseStatus": "declined",
+        "displayName": "LON-17-Tower (4) [Zoom]"
+      },
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "rvelardi@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "jmcdonald@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "arosenberg@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "lberta@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "thende@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "wsong@ripple.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "carolyn@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "aturakhia@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "ripple.com_18844bmf5j5n2g0hkp9p7urr2j7pe6gb6sp32chh6kpj6c9g6k@resource.calendar.google.com",
+        "responseStatus": "declined",
+        "displayName": "LON-17-Southwark (10) [Zoom]"
+      },
+      {
+        "email": "mqadir@ripple.com",
+        "responseStatus": "tentative"
+      },
+      {
+        "email": "bprocak@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "cchan@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "c_1880k75e5v7oogm5kjnfpuoal7vno@resource.calendar.google.com",
+        "responseStatus": "accepted",
+        "displayName": "SFO-2-Licensed (7) [Zoom]"
+      },
+      {
+        "email": "mkopp@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "lsondland@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "jmciver@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "rshukla@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "c_18881a91uqqmqjvpjc4aagvoheh36@resource.calendar.google.com",
+        "responseStatus": "accepted",
+        "displayName": "NYC-111-6-George Washington (5) [Zoom]"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=MnNvaTFram92dHNpbGs0M2NkajlscDc0cGRfMjAyNjAzMDlUMTUwMDAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "4juu26roqccn4eb9omak82ga2u_20260309T153000Z",
+    "summary": "Ripple x Studio Weekly",
+    "start": {
+      "dateTime": "2026-03-09T15:30:00Z",
+      "timeZone": "America/Los_Angeles"
+    },
+    "end": {
+      "dateTime": "2026-03-09T15:55:00Z",
+      "timeZone": "America/Los_Angeles"
+    },
+    "status": "confirmed",
+    "location": "https://ripple.zoom.us/j/95141459275?pwd=eelij3vDLY1ZplerjC43ravxRj7aeU.1&jst=3",
+    "organizer": {
+      "email": "cchan@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "gary.coover@gmail.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "cchan@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "aturakhia@ripple.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "wsculley@gmail.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "accepted"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=NGp1dTI2cm9xY2NuNGViOW9tYWs4MmdhMnVfMjAyNjAzMDlUMTUzMDAwWiByY2hhdHRlcmplZUByaXBwbGUuY29t&ctz=Europe/London"
+  },
+  {
+    "id": "7t46b8v43miq3dta14amtdu714",
+    "summary": "XRP Proposal Review Meeting",
+    "start": {
+      "dateTime": "2026-03-09T15:30:00Z",
+      "timeZone": "America/Los_Angeles"
+    },
+    "end": {
+      "dateTime": "2026-03-09T16:15:00Z",
+      "timeZone": "America/Los_Angeles"
+    },
+    "status": "confirmed",
+    "location": "https://ripple.zoom.us/j/95736834507?pwd=QkGYZEAWEm6pnIubioAht2cScEu6uO.1&jst=3, LON-17-Millennium (4) [Zoom], GVA-5-Majeur (7), MIA-9-Coco Walk (8) [Zoom], MIA-9-Little Havana (4) [Zoom]",
+    "organizer": {
+      "email": "minfanger@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "ripple.com_1884nki8uumughm8g4i578kdvhpa06gb6srjechl60qjidpj74@resource.calendar.google.com",
+        "responseStatus": "accepted",
+        "displayName": "LON-17-Millennium (4) [Zoom]"
+      },
+      {
+        "email": "c_18894r5mkutqcjdtir3jlojjpe468@resource.calendar.google.com",
+        "responseStatus": "accepted",
+        "displayName": "GVA-5-Majeur (7)"
+      },
+      {
+        "email": "jon@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "tbui@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "dcreagh@ripple.com",
+        "responseStatus": "tentative"
+      },
+      {
+        "email": "pmistry@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "ejeck@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "monica@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "cchan@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "minfanger@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "aturakhia@ripple.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "brad@ripple.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "c_1882bvss60kk6g3lg5cunve17eqsu@resource.calendar.google.com",
+        "responseStatus": "accepted",
+        "displayName": "MIA-9-Coco Walk (8) [Zoom]"
+      },
+      {
+        "email": "c_18854busnig80hvtkldod9oc2uris@resource.calendar.google.com",
+        "responseStatus": "accepted",
+        "displayName": "MIA-9-Little Havana (4) [Zoom]"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=N3Q0NmI4djQzbWlxM2R0YTE0YW10ZHU3MTQgcmNoYXR0ZXJqZWVAcmlwcGxlLmNvbQ&ctz=Europe/London"
+  },
+  {
+    "id": "2qkkd4j7568u0qlvc9nr166718",
+    "summary": "Ripple <> Hyperliquid",
+    "start": {
+      "dateTime": "2026-03-09T16:00:00Z",
+      "timeZone": "America/Vancouver"
+    },
+    "end": {
+      "dateTime": "2026-03-09T16:30:00Z",
+      "timeZone": "America/Vancouver"
+    },
+    "status": "confirmed",
+    "organizer": {
+      "email": "sterling@hl-labs.xyz"
+    },
+    "attendees": [
+      {
+        "email": "ecrouwel@hiddenroad.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "sterling@hl-labs.xyz",
+        "responseStatus": "accepted"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=MnFra2Q0ajc1Njh1MHFsdmM5bnIxNjY3MTggcmNoYXR0ZXJqZWVAcmlwcGxlLmNvbQ&ctz=Europe/London"
+  },
+  {
+    "id": "61qu4cebptnou6tb3sefcfd4v8",
+    "summary": "Manager Circle: 2026 Performance Review Process (Option 1 of 5)",
+    "start": {
+      "dateTime": "2026-03-09T16:00:00Z",
+      "timeZone": "America/Phoenix"
+    },
+    "end": {
+      "dateTime": "2026-03-09T16:45:00Z",
+      "timeZone": "America/Phoenix"
+    },
+    "status": "confirmed",
+    "location": "https://ripple.zoom.us/j/98449636506?pwd=FjEkXSzCkjMUqUxU0xmnbnyOrVhA7L.1&jst=3, SFO-2-Building Block (9) [Zoom], GVA-5-Brienz (5), MIA-9-Biscayne Blvd (4) [Zoom], LON-16-Bank (10) [Zoom]",
+    "organizer": {
+      "email": "ncongelosi@ripple.com"
+    },
+    "attendees": [
+      {
+        "email": "rchatterjee@ripple.com",
+        "responseStatus": "needsAction"
+      }
+    ],
+    "htmlLink": "https://www.google.com/calendar/event?eid=NjFxdTRjZWJwdG5vdTZ0YjNzZWZjZmQ0djggcmNoYXR0ZXJqZWVAcmlwcGxlLmNvbQ&ctz=Europe/London"
+  }
+]
