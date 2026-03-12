@@ -1,0 +1,319 @@
+/* Legacy CSS variables for existing components */
+:root {
+  --bg-primary: #09090b;
+  --bg-secondary: #18181b;
+  --bg-card: #1c1c22;
+  --bg-card-hover: #27272a;
+  --border: #2a2a30;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --accent: #3b82f6;
+  --accent-light: #60a5fa;
+  --accent-glow: rgba(59, 130, 246, 0.3);
+  --green: #22c55e;
+  --green-dim: rgba(34, 197, 94, 0.15);
+  --red: #ef4444;
+  --red-dim: rgba(239, 68, 68, 0.15);
+  --orange: #f59e0b;
+  --cyan: #06b6d4;
+  --purple: #a855f7;
+}
+
+/* Stats Row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--bg-card, #1a1f2e);
+  border: 1px solid var(--border, #2a3040);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s;
+}
+
+.stat-card:hover {
+  border-color: var(--accent, #6366f1);
+}
+
+.stat-label {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.stat-sub {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card, #1a1f2e);
+  border: 1px solid var(--border, #2a3040);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border, #2a3040);
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title svg {
+  color: var(--accent-light, #818cf8);
+}
+
+.card-body {
+  padding: 20px 22px;
+}
+
+/* Holders Table */
+.holder-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(42, 48, 64, 0.5);
+  gap: 12px;
+  transition: background 0.15s;
+}
+
+.holder-row:last-child { border-bottom: none; }
+.holder-row:hover { background: var(--bg-card-hover, #222840); margin: 0 -22px; padding: 10px 22px; }
+
+.holder-rank {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+  font-weight: 600;
+  width: 24px;
+  text-align: center;
+}
+
+.holder-entity-type {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.type-cex { background: rgba(6, 182, 212, 0.15); color: var(--cyan, #06b6d4); }
+.type-dex { background: rgba(168, 85, 247, 0.15); color: var(--purple, #a855f7); }
+.type-lending { background: rgba(245, 158, 11, 0.15); color: var(--orange, #f59e0b); }
+.type-misc { background: rgba(99, 102, 241, 0.15); color: var(--accent-light, #818cf8); }
+
+.holder-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.holder-name {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.holder-balance {
+  text-align: right;
+}
+
+.holder-usd {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.holder-change {
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.holder-change.up { color: var(--green, #22c55e); }
+.holder-change.down { color: var(--red, #ef4444); }
+
+.holder-bar-wrap {
+  width: 120px;
+}
+
+.holder-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-secondary, #111827);
+  overflow: hidden;
+}
+
+.holder-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent, #6366f1), var(--purple, #a855f7));
+  transition: width 0.5s ease;
+}
+
+/* Counterparty */
+.cp-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(42, 48, 64, 0.5);
+  gap: 12px;
+}
+
+.cp-row:last-child { border-bottom: none; }
+
+.cp-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cp-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.cp-label.in { background: rgba(34, 197, 94, 0.15); color: var(--green, #22c55e); }
+.cp-label.out { background: rgba(239, 68, 68, 0.15); color: var(--red, #ef4444); }
+.cp-label.all { background: rgba(99, 102, 241, 0.15); color: var(--accent-light, #818cf8); }
+
+.cp-usd {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  min-width: 100px;
+}
+
+.cp-txns {
+  font-size: 12px;
+  color: var(--text-muted, #64748b);
+  text-align: right;
+  min-width: 60px;
+}
+
+/* Bubble Chart */
+.bubble-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.bubble {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.bubble:hover {
+  transform: scale(1.1);
+  border-color: white;
+  z-index: 10;
+}
+
+.bubble-text {
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  line-height: 1.2;
+  padding: 4px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.bubble-text .amount {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+/* Tooltip */
+.tooltip-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.tooltip {
+  position: fixed;
+  background: var(--bg-card, #1a1f2e);
+  border: 1px solid var(--border, #2a3040);
+  border-radius: 10px;
+  padding: 14px 18px;
+  z-index: 101;
+  pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  min-width: 200px;
+}
+
+.tooltip h4 {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--accent-light, #818cf8);
+}
+
+.tooltip p {
+  font-size: 12px;
+  color: var(--text-secondary, #94a3b8);
+  margin: 4px 0;
+}
+
+.tooltip .val {
+  color: var(--text-primary, #f1f5f9);
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .stats-row { grid-template-columns: 1fr; }
+}

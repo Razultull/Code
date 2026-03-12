@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --color-primary: #2563eb;
+  --color-surface: #0b0d11;
+  --color-card: #0f1117;
+  --color-border: #1a1d25;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  background: #0b0d11;
+  color: #e4e4e7;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* All numbers should be monospace */
+.font-mono, .tabular-nums, td, th { font-family: var(--font-mono); }
+
+/* Scrollbar - minimal */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1a1d25; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #2a2d35; }
+
+/* Card base style */
+.card { background: #0f1117; border: 1px solid #1a1d25; border-radius: 6px; }
+.card-header { border-bottom: 1px solid #1a1d25; padding: 8px 12px; }
+.card-body { padding: 12px; }
