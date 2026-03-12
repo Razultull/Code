@@ -3,12 +3,11 @@ import { Container } from './components/Container';
 import { Spinner } from './components/Spinner';
 import { MetricsBar } from './components/MetricsBar';
 import { Summary } from './components/Summary';
-import BubbleMap from './components/BubbleMap';
+import EntityExplorer from './components/entityExplorer';
 import HoldersTable from './components/HoldersTable';
 import CounterpartyTable from './components/CounterpartyTable';
 import HoldersChart from './components/HoldersChart';
 import FlowChart from './components/FlowChart';
-import NetworkGraph from './components/NetworkGraph';
 import { DashboardHeader } from './components/Header';
 
 function Dashboard() {
@@ -45,22 +44,19 @@ function Dashboard() {
         {/* Row 1: Stats */}
         <Summary holders={holders} totalHeld={totalHeld} totalChange={totalChange} totalChangePct={totalChangePct} cexTotal={cexTotal} defiTotal={defiTotal} />
 
-        {/* Row 2: Visualizations - 2 col */}
+        {/* Row 2: Entity Explorer - full width */}
+        <EntityExplorer holders={holders} counterparties={counterparties} totalHeld={totalHeld} />
+
+        {/* Row 3: Charts - 2 col */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
-          <BubbleMap holders={holders} totalHeld={totalHeld} />
           <HoldersChart holders={holders} />
+          <FlowChart counterparties={counterparties} />
         </div>
 
-        {/* Row 3: Tables - 2 col */}
+        {/* Row 4: Tables - 2 col */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
           <HoldersTable holders={holders} totalHeld={totalHeld} />
           <CounterpartyTable counterparties={counterparties} />
-        </div>
-
-        {/* Row 4: Flow & Network - 2 col */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
-          <FlowChart counterparties={counterparties} />
-          <NetworkGraph holders={holders} counterparties={counterparties} />
         </div>
       </div>
 
